@@ -10,6 +10,6 @@ from fastapi import (
 router = APIRouter()
 
 
-@router.get("/")
-async def root():
-    return {"message": "Hello World"}
+@router.post("/api/create_npc_character")
+async def create_npc_character():
+    pass
