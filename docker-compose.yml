@@ -10,6 +10,7 @@ services:
       DATABASE_URL: postgresql://${PG_USER}:${PG_PASSWORD}@db/dnd-campaign
       WAIT_HOSTS: db:5432
       PORT: 8000
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     build:
       context: backend
       dockerfile: Dockerfile
