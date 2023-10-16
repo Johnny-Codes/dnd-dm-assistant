@@ -25,7 +25,7 @@ def npc_creation(work, add_info):
             },
         ],
         max_tokens=512,
-        temperature=0.7,
+        temperature=0.9,
     )
 
     character = response.choices[0].message.content

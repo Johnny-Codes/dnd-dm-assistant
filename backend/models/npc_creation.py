@@ -9,6 +9,7 @@ class CreateNPCIn(BaseModel):
 
 
 class RolePlayingTips(BaseModel):
+    id: int
     tip: str
 
 
