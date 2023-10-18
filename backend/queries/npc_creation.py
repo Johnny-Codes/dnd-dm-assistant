@@ -7,8 +7,6 @@ class NPCCreationRepo:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 try:
-                    conn.begin()
-
                     char_id = self.insert_base_character(db, data)
                     npc_id = self.insert_npc_level_one(db, data, char_id)
                     self.update_base_character_npc_id(db, char_id, npc_id)
@@ -18,8 +16,6 @@ class NPCCreationRepo:
                         npc_id,
                     )
 
-                    conn.commit()
-
                     npc_out = self.create_npc_out(
                         char_id,
                         data,
@@ -28,7 +24,6 @@ class NPCCreationRepo:
                     return npc_out
 
                 except Exception as e:
-                    conn.rollback()
                     raise e
 
     def insert_base_character(self, db, data):
