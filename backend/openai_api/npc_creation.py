@@ -34,7 +34,6 @@ def npc_creation(work, add_info):
     if character_dict_match:
         character_json_str = character_dict_match.group(0)
         character_j = json.loads(character_json_str)
-        print("character j type", type(character_j))
         return character_j
     else:
         return None
