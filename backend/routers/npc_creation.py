@@ -3,7 +3,10 @@ from fastapi import (
     APIRouter,
     Depends,
 )
-from models.npc_creation import CreateNPCIn, CreateNPCOut, GetOneNPC
+from models.npc_creation import (
+    CreateNPCIn,
+    CreateNPCOut,
+)
 from openai_api.npc_creation import npc_creation
 from queries.npc_creation import NPCCreationRepo
 
