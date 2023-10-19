@@ -131,3 +131,19 @@ class NPCCreationRepo:
                     )
                 else:
                     return None
+
+    def delete(self, data):
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
+                    DELETE FROM npc_level_one
+                    WHERE id = %s;
+                    """,
+                    [
+                        data,
+                    ],
+                )
+                if db.rowcount != 1:
+                    return None
+                return True

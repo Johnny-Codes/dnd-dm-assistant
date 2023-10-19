@@ -12,7 +12,7 @@ steps = [
         CREATE TABLE role_playing_tips (
             id SERIAL PRIMARY KEY NOT NULL,
             tip TEXT NULL,
-            character_id INT REFERENCES npc_level_one(id)
+            character_id INT REFERENCES npc_level_one(id) ON DELETE CASCADE
         );
         """,
         """

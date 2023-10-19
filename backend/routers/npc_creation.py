@@ -13,7 +13,7 @@ from queries.npc_creation import NPCCreationRepo
 router = APIRouter()
 
 
-@router.post("/api/create_npc_character", response_model=CreateNPCOut)
+@router.post("/api/npc_level_one", response_model=CreateNPCOut)
 async def create_npc_character(
     model: CreateNPCIn,
     repo: NPCCreationRepo = Depends(),
@@ -28,7 +28,7 @@ async def create_npc_character(
         raise HTTPException(status_code=500, detail="Failed to create NPC")
 
 
-@router.get("/api/get_all_npc_level_one_characters")
+@router.get("/api/npc_level_one_characters")
 async def get_all_npc_level_one_characters(
     repo: NPCCreationRepo = Depends(),
 ):
@@ -36,10 +36,19 @@ async def get_all_npc_level_one_characters(
     return all_npcs
 
 
-@router.get("/api/get_npc_level_one/{npc_id}", response_model=CreateNPCOut)
+@router.get("/api/npc_level_one/{npc_id}", response_model=CreateNPCOut)
 async def get_npc_level_one(
     npc_id: int,
     repo: NPCCreationRepo = Depends(),
 ):
     npc = repo.get_npc_level_one(npc_id)
+    return npc
+
+
+@router.delete("/api/npc_level_one/{npc_id}")
+async def delete_npc_level_one(
+    npc_id: int,
+    repo: NPCCreationRepo = Depends(),
+):
+    npc = repo.delete(npc_id)
     return npc
