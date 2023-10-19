@@ -18,3 +18,7 @@ class CreateNPCOut(BaseCharacter):
     personality: str
     physical_description: str
     role_playing_tips: List[RolePlayingTips]
+
+
+class GetOneNPC(BaseModel):
+    id: int

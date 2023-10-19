@@ -7,9 +7,8 @@ class NPCCreationRepo:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 try:
-                    char_id = self.insert_base_character(db, data)
-                    npc_id = self.insert_npc_level_one(db, data, char_id)
-                    self.update_base_character_npc_id(db, char_id, npc_id)
+                    npc_id = self.insert_npc_level_one(db, data)
+
                     role_playing_tips = self.insert_role_playing_tips(
                         db,
                         data,
@@ -17,52 +16,32 @@ class NPCCreationRepo:
                     )
 
                     npc_out = self.create_npc_out(
-                        char_id,
+                        npc_id,
                         data,
                         role_playing_tips,
                     )
+
                     return npc_out
 
                 except Exception as e:
                     raise e
 
-    def insert_base_character(self, db, data):
-        base_character = db.execute(
-            """
-            INSERT INTO base_character (name, race)
-            VALUES (%s, %s)
-            RETURNING id
-            """,
-            [data["name"], data["race"]],
-        )
-        char = base_character.fetchone()
-        return char[0]
-
-    def insert_npc_level_one(self, db, data, char_id):
+    def insert_npc_level_one(self, db, data):
         npc_level_one_char = db.execute(
             """
-            INSERT INTO npc_level_one (personality, physical_description, base_character_id)
-            VALUES (%s, %s, %s)
+            INSERT INTO npc_level_one (name, race, personality, physical_description)
+            VALUES (%s, %s, %s, %s)
             RETURNING id
             """,
             [
+                data["name"],
+                data["race"],
                 data["personality"],
                 data["physical_description"],
-                char_id,
             ],
         )
         npc = npc_level_one_char.fetchone()
         return npc[0]
-
-    def update_base_character_npc_id(self, db, char_id, npc_id):
-        db.execute(
-            """
-            UPDATE base_character
-            SET npc_level_one_id = %s
-            WHERE id = %s
-            """,
-            [npc_id, char_id],
-        )
 
     def insert_role_playing_tips(self, db, data, npc_id):
         role_playing_tips = []
@@ -89,3 +68,66 @@ class NPCCreationRepo:
             race=data["race"],
             role_playing_tips=role_playing_tips,
         )
+
+    def get_all_npc_level_one_chars(self):
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                result = db.execute(
+                    """
+                    SELECT * FROM npc_level_one;
+                    """
+                )
+                new_list = []
+                for npc in result.fetchall():
+                    print("npc", npc)
+                    new_list.append(
+                        CreateNPCOut(
+                            id=npc[0],
+                            name=npc[1],
+                            race=npc[2],
+                            personality=npc[3],
+                            physical_description=npc[4],
+                            role_playing_tips=self.get_role_playing_tips(
+                                db,
+                                npc[0],
+                            ),
+                        )
+                    )
+                return new_list
+
+    def get_role_playing_tips(self, db, character_id):
+        result = db.execute(
+            """
+            SELECT id, tip
+            FROM role_playing_tips
+            WHERE character_id = %s;
+            """,
+            [character_id],
+        )
+        role_playing_tips = []
+        for tip in result:
+            role_playing_tips.append(RolePlayingTips(id=tip[0], tip=tip[1]))
+        return role_playing_tips
+
+    def get_npc_level_one(self, data):
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                result = db.execute(
+                    """
+                    SELECT * FROM npc_level_one
+                    WHERE id = %s;
+                    """,
+                    [data],
+                )
+                npc = result.fetchone()
+                if npc:
+                    return CreateNPCOut(
+                        id=npc[0],
+                        name=npc[1],
+                        race=npc[2],
+                        personality=npc[3],
+                        physical_description=npc[4],
+                        role_playing_tips=self.get_role_playing_tips(db, npc[0]),
+                    )
+                else:
+                    return None

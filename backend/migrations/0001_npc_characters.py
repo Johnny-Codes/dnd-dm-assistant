@@ -1,14 +1,10 @@
 steps = [
     [
         """
-        CREATE TABLE base_character (
+        CREATE TABLE npc_level_one (
             id SERIAL PRIMARY KEY NOT NULL,
             name VARCHAR(124) NOT NULL UNIQUE,
             race TEXT NOT NULL,
-            npc_level_one_id INT UNIQUE
-        );
-        CREATE TABLE npc_level_one (
-            id SERIAL PRIMARY KEY NOT NULL,
             personality TEXT NULL,
             physical_description TEXT NULL,
             base_character_id INT UNIQUE
@@ -20,7 +16,6 @@ steps = [
         );
         """,
         """
-        DROP TABLE base_character;
         DROP TABLE npc_level_one;
         DROP TABLE role_playing_tips;
         """,

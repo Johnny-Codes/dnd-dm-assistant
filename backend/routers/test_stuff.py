@@ -1,20 +1,18 @@
-# from fastapi import (
-#     Depends,
-#     HTTPException,
-#     status,
-#     Response,
-#     APIRouter,
-#     Request,
-# )
+from fastapi import (
+    Depends,
+    HTTPException,
+    status,
+    Response,
+    APIRouter,
+    Request,
+)
 
-# router = APIRouter()
+from dnd_api.dnd_api import get_equipment_from_api
 
-
-# @router.get("/")
-# async def homepage():
-#     return "Home"
+router = APIRouter()
 
 
-# @router.post("/api/create_npc_character")
-# async def create_npc_character():
-#     return "Hello World"
+@router.get("/api/test")
+async def get_equipment():
+    x = get_equipment_from_api()
+    return x

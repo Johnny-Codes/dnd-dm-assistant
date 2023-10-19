@@ -28,12 +28,16 @@ def npc_creation(work, add_info):
         temperature=0.9,
     )
 
-    character = response.choices[0].message.content
+    print("response", response)
+    if response.choices[0].finish_reason == "stop":
+        character = response.choices[0].message.content
 
-    character_dict_match = re.search(r"{[^}]+}", character)
-    if character_dict_match:
-        character_json_str = character_dict_match.group(0)
-        character_j = json.loads(character_json_str)
-        return character_j
+        character_dict_match = re.search(r"{[^}]+}", character)
+        if character_dict_match:
+            character_json_str = character_dict_match.group(0)
+            character_j = json.loads(character_json_str)
+            return character_j
+        else:
+            return None
     else:
-        return None
+        npc_creation(work, add_info)
