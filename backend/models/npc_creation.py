@@ -20,10 +20,8 @@ class CreateNPCOut(BaseCharacter):
     role_playing_tips: List[RolePlayingTips]
 
 
-class UpdateNPCData(BaseModel):
-    name: str
-    race: str
+class UpdateNPCData(BaseCharacter):
+    id: int
     personality: str
     physical_description: str
-    id: int
     role_playing_tips: List[RolePlayingTips]

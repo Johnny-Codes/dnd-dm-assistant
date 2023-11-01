@@ -43,7 +43,7 @@ class NPCCreationRepo:
         npc = npc_db.fetchone()
         return npc[0]
 
-    def update_role_playing_tips(self, db, data, npc_id):
+    def update_role_playing_tips(self, db, data):
         data = data.dict()
         role_playing_tips = []
         for tip in data["role_playing_tips"]:
@@ -182,7 +182,6 @@ class NPCCreationRepo:
             data.physical_description,
             data.id,
         ]
-        print("parameters", parameters)
         with pool.connection() as conn:
             with conn.cursor() as db:
                 try:
