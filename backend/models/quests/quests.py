@@ -11,3 +11,7 @@ class QuestIn(BaseModel):
 class QuestOut(QuestIn):
     id: int
     npcs: Optional[List[CreateNPCOut]] = None
+
+
+class AllQuestsOut(BaseModel):
+    quests: List[QuestOut]

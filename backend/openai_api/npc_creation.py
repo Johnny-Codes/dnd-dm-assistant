@@ -27,8 +27,6 @@ def npc_creation(work, add_info):
         max_tokens=512,
         temperature=0.9,
     )
-
-    print("response", response)
     if response.choices[0].finish_reason == "stop":
         character = response.choices[0].message.content
 
