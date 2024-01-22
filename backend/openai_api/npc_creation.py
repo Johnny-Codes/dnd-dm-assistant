@@ -1,7 +1,8 @@
 import os
 import json
 import re
-import openai
+
+from openai import OpenAI
 
 from .prompts import (
     chat_roles,
@@ -9,11 +10,11 @@ from .prompts import (
     output_content_type,
 )
 
+client = OpenAI()
+
 
 def npc_creation(work, add_info):
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=ai_models["3_5"],
         messages=[
             {"role": "system", "content": chat_roles["initial"]},

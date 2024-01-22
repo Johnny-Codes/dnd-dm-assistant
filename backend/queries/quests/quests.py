@@ -1,6 +1,5 @@
 from queries.pool import pool
 from models.quests.quests import (
-    QuestIn,
     QuestOut,
 )
 from queries.npc_creation import NPCCreationRepo
@@ -33,33 +32,6 @@ class QuestsRepo:
                             description=description,
                         )
                     return False
-                except Exception as e:
-                    raise e
-
-    def get_quest(self, quest_id):
-        with pool.connection as conn:
-            with conn.cursor as db:
-                try:
-                    request = db.execute(
-                        """
-                            SELECT * from quests
-                            WHERE id = %s;
-                        """,
-                        [
-                            quest_id,
-                        ],
-                    )
-                    quest = request.fetchone()
-                    if quest:
-                        id = quest[0]
-                        name = quest[1]
-                        description = quest[2]
-                        return QuestOut(
-                            id=id,
-                            name=name,
-                            description=description,
-                        )
-                    return None
                 except Exception as e:
                     raise e
 
@@ -137,3 +109,71 @@ class QuestsRepo:
 
     def create_quest_out(self, quest, npc_list):
         pass
+
+    def get_quest(self, quest_id):
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                try:
+                    print("Getting quest with ID:", quest_id)
+                    quest = db.execute(
+                        """
+                        SELECT * FROM quests
+                        WHERE id = %s;
+                        """,
+                        [quest_id],
+                    )
+                    quest_data = quest.fetchone()
+                    if quest_data:
+                        get_npcs = self.get_npcs_for_quest(db, quest_id)
+                        return QuestOut(
+                            id=quest_data[0],
+                            name=quest_data[1],
+                            description=quest_data[2],
+                            npcs=get_npcs,
+                        )
+                    return None
+                except Exception as e:
+                    print("Error getting quest:", str(e))
+                    raise e
+
+    def delete_quest(self, quest_id):
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                try:
+                    print("Deleting quest with ID:", quest_id)
+                    db.execute(
+                        """
+                        DELETE FROM quests
+                        WHERE id = %s;
+                        """,
+                        [
+                            quest_id,
+                        ],
+                    )
+                    conn.commit()
+                    if db.rowcount != 1:
+                        return None
+                    return True
+                except Exception as e:
+                    print("Error deleting quest:", str(e))
+                    # raise e
+                    return e
+
+    def update_quest(self, quest_id, updated_quest):
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                try:
+                    update = db.execute(
+                        """
+                        UPDATE quests
+                        SET name = %s, description = %s
+                        WHERE id = %s;
+                        """,
+                        [updated_quest.name, updated_quest.description, quest_id],
+                    )
+                    conn.commit()
+                    update_quest = self.get_quest(quest_id)
+                    return update_quest
+                except Exception as e:
+                    print("Error updating quest:", str(e))
+                    raise e

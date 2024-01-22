@@ -7,7 +7,7 @@ output_content_type = {
 }
 
 ai_models = {
-    "3_5": "gpt-3.5-turbo",
+    "3_5": "gpt-3.5-turbo-1106",
     "4": "gpt-4",
 }
 

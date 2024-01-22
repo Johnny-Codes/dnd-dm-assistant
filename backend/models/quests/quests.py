@@ -15,3 +15,8 @@ class QuestOut(QuestIn):
 
 class AllQuestsOut(BaseModel):
     quests: List[QuestOut]
+
+
+class UpdateQuestIn(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
