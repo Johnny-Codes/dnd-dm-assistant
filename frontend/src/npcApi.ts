@@ -9,7 +9,15 @@ export const npcApi = createApi({
             query: () => "/npcs",
             providesTags: ["npcs"],
         }),
+        createNpc: build.mutation({
+            query: (npc) => ({
+                url: "/npcs",
+                method: "POST",
+                body: npc,
+            }),
+            invalidatesTags: ["npcs"],
+        }),
     }),
 });
 
-export const { useGetNpcsQuery } = npcApi;
+export const { useGetNpcsQuery, useCreateNpcMutation } = npcApi;
