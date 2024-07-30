@@ -14,6 +14,14 @@ const NPCList = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  const toggleVisibility = (id) => {
+    setVisibleNpcIds((prevVisibleNpcIds) =>
+        prevVisibleNpcIds.includes(id)
+            ? prevVisibleNpcIds.filter((npcId) => npcId !== id)
+            : [...prevVisibleNpcIds, id]
+    );
+};
+
   return (
     <div>
       {data?.map((npc) => (
